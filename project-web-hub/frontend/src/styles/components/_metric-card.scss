@@ -1,0 +1,44 @@
+.metric-card {
+  flex: 1 1 150px;
+  min-width: 150px;
+  padding: 12px 14px;
+  border: 1px solid var(--app-border);
+  border-left-width: 4px;
+  border-radius: 14px;
+  background: rgba(15, 23, 42, 0.92);
+}
+
+.metric-card__header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.metric-card__icon {
+  font-size: 0.95rem;
+}
+
+.metric-card__title {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--app-text-muted);
+}
+
+.metric-card__body {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.metric-card__value {
+  font-size: 1.95rem;
+  line-height: 1;
+  font-weight: 800;
+}
+
+.metric-card__unit {
+  font-size: 0.78rem;
+  color: var(--app-text-muted);
+}

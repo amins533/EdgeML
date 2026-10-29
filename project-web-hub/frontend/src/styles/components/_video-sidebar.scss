@@ -1,0 +1,102 @@
+.video-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 18px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow);
+  max-height: calc(100vh - 160px);
+  overflow: auto;
+}
+
+.video-sidebar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.video-sidebar__title {
+  margin: 0;
+  font-size: 1.05rem;
+  color: var(--app-text-strong);
+}
+
+.video-sidebar__pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.video-sidebar__pager-label {
+  min-width: 54px;
+  text-align: center;
+  font-size: 0.86rem;
+  color: var(--app-text-muted);
+}
+
+.video-sidebar__pager-button {
+  width: 32px;
+  height: 32px;
+  border: 1px solid rgba(148, 163, 184, 0.18);
+  border-radius: 10px;
+  background: rgba(148, 163, 184, 0.12);
+  color: var(--app-text-strong);
+  cursor: pointer;
+}
+
+.video-sidebar__pager-button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.video-sidebar__list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.video-sidebar__empty {
+  padding: 12px 14px;
+  border: 1px dashed rgba(148, 163, 184, 0.22);
+  border-radius: 12px;
+  color: var(--app-text-muted);
+  background: rgba(15, 23, 42, 0.65);
+}
+
+.video-sidebar__item {
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 12px;
+  padding: 12px 14px;
+  cursor: pointer;
+  text-align: left;
+  background: rgba(15, 23, 42, 0.78);
+  color: var(--app-text);
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+}
+
+.video-sidebar__item:hover {
+  transform: translateY(-1px);
+  border-color: var(--app-border-strong);
+}
+
+.video-sidebar__item--active {
+  color: #ffffff;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.92), rgba(14, 165, 233, 0.82));
+  border-color: rgba(125, 211, 252, 0.55);
+}
+
+@media (max-width: 1024px) {
+  .video-sidebar {
+    max-height: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .video-sidebar__header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

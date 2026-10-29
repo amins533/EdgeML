@@ -1,0 +1,33 @@
+.app-shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  min-height: 100vh;
+  padding: 20px;
+  color: var(--app-text);
+}
+
+.app-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(300px, 0.95fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.app-layout__player-column {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+}
+
+@media (max-width: 1024px) {
+  .app-shell {
+    padding: 16px;
+  }
+
+  .app-layout {
+    grid-template-columns: 1fr;
+  }
+}

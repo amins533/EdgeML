@@ -1,0 +1,124 @@
+/__pycache__
+/env
+/videos
+/videos-ocr
+/data-base
+/datasets
+
+/runs
+
+/ocr_real_runs
+
+*.env
+
+.DS_Store
+.python-version
+
+*.csv
+*.mp4
+*.jpg
+*.jpeg
+*.png
+*.pdf
+*.docx
+*.xlsx
+
+yolo26n.pt
+yolov8n-cls.pt
+yolov8n.pt
+yolo11n.pt
+yolo11n-pose.pt
+yolo11x-pose.pt
+
+*.db
+*.sqlite
+*.sqlite3
+
+*:Zone.Identifier
+*:Zone.Identifier:$DATA
+*:[Zz]one.Identifier
+*:[Zz]one.Identifier:$DATA
+
+## project-web-hub .gitignore
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Python virtual environments
+env/
+venv/
+.venv/
+env-hub/
+
+# Python cache and generated files
+__pycache__/
+*.py[cod]
+
+# Large datasets and archives
+*.zip
+
+# Python virtual environments
+env/
+venv/
+.venv/
+env-hub/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Large dataset file
+/homographie_analisis/hard_frames.zip
+
+# Local Python environments and cache
+/env/
+/project-web-hub/backend/env-hub/
+/__pycache__/
+**/__pycache__/
+
+# Video clips and OCR videos
+/videos/
+/videos-ocr/
+
+# Training and test datasets
+/EdgeML Meets American Football.yolov8/
+/training/
+/training_playcards/
+/test-dataset-ocr/
+
+# Generated images and experiment outputs
+/cards/
+/legible/
+/sortedcards/
+/sortedcards-copy/
+/runs/
+/ocr_real_runs/
+
+# Local databases and large archives
+*.db
+*.zip
+
+# Windows metadata
+*:Zone.Identifier

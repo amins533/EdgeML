@@ -1,0 +1,56 @@
+.metrics-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 22px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-lg);
+  background: var(--app-surface);
+  box-shadow: var(--app-shadow);
+}
+
+.metrics-section__title {
+  margin: 0;
+  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
+  color: var(--app-text-strong);
+}
+
+.metrics-section__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.metrics-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 16px;
+  border: 1px solid var(--app-border);
+  border-radius: var(--app-radius-md);
+  background: rgba(2, 6, 23, 0.34);
+}
+
+.metrics-group__title {
+  margin: 0;
+  font-size: 0.82rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--app-text-muted);
+}
+
+.metrics-group__content {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.metrics-group__ocr-list {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--app-border);
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.85);
+  color: var(--app-text);
+  font-size: 0.88rem;
+}
