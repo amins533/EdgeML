@@ -1,101 +1,139 @@
-# gruppe1
+# EdgeML Meets American Football
 
-## Project Layout
+**Modul:** Informatik Projekt im 5. Semester  
+**Institution:** Frankfurt University of Applied Sciences  
+**Team:** Gruppe 1  
+**Betreuer:** David Merkl, M.Sc. (Labor für eingebettete Systeme)  
+**Datum:** August 2026  
 
-- `app/`: runnable entrypoints.
-- `core/`: shared runtime modules.
-- `dataset_prep/`: dataset preparation and conversion scripts.
-- `training/`: model training and upload scripts.
-- `tools/`: manual utilities and test scripts.
+Das vorliegende Repository enthält ein vollständiges Edge AI System für die taktische Analyse von American Football Spielen. Dieses Universitätsprojekt wurde nach den Prinzipien des agilen Scrum Frameworks entwickelt. Das Projekt kombiniert Computer Vision und Machine Learning, um Spielzüge, Formationen und Laufwege in Echtzeit zu erkennen. 
 
+Die Serverversion des Systems wurde ursprünglich für den eigenständigen Einsatz auf Edge Hardware wie dem Nvidia Jetson Orin Nano am Spielfeldrand konzipiert. Diese Version lässt sich jedoch ebenso problemlos auf anderen leistungsstarken Serverumgebungen betreiben.
 
+---
 
-## Getting started
+## Systemübersicht & Pipeline
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Die Analysepipeline verarbeitet Football-Videos asynchron durch die folgenden sequenziellen Phasen:
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+1. Frame-Verarbeitung und asynchrones Video-Streaming
+2. Spielererkennung und Multi-Objekt-Tracking
+3. Homographie-Schätzung (Perspektiven-Transformation)
+4. Trikotnummern-Erkennung (OCR)
+5. Formationsklassifizierung (Pre-Snap)
+6. Datenbankspeicherung und Trajektorien-Aufzeichnung
+7. Taktische Playcard-Generierung
 
-## Add your files
+Das Ziel ist es, taktische Informationen aus aufgezeichneten Football-Spielen vollautomatisch zu extrahieren.
 
-* [Create](https://docs.gitlab.com/user/project/repository/web_editor/#create-a-file) or [upload](https://docs.gitlab.com/user/project/repository/web_editor/#upload-a-file) files
-* [Add files using the command line](https://docs.gitlab.com/topics/git/add_files/#add-files-to-a-git-repository) or push an existing Git repository with the following command:
+---
 
+## Projektstruktur
+
+Das System ist in verschiedene logische Schichten und Ordner unterteilt, um den Code sauber zu trennen:
+
+```text
+models/                 Trainierte Gewichte für die YOLO- und XGBoost-Modelle
+videos/                 Eingabevideos (muss lokal erstellt werden)
+project-web-hub/        Quellcode für React-Frontend und FastAPI-Backend
+dataset_preparation/    Skripte zur Datenaufbereitung und Konvertierung
+training/               Skripte für das Training der KI-Modelle
+tools/                  Diverse kleine Skripte für Tests und Debugging
+cards/                  Generierte, finale Playcards nach der Videoanalyse
+homographie_analisis/   Debugging und Fehleranalysen der Feldkoordinaten
+ocr_real_runs/          Lokal generierte Bilder und Evaluierungen des OCR-Modells
+data-base/              Speicherort der generierten SQLite-Datenbanken
+Test Versionen/         Experimentelle Implementierungen
 ```
-cd existing_repo
-git remote add origin https://gitlab.informatik.fb2.frankfurt-university.de/edgeml/gruppe1.git
-git branch -M main
-git push -uf origin main
+
+---
+
+## Systemkomponenten & Hauptdateien
+
+Die Kernfunktionalität wird durch folgende essenzielle Skripte abgebildet:
+
+* **`main.py`** – Der primäre Orchestrator für die rein lokale Ausführung des Programms mit direkter Bildschirmausgabe.
+* **`main-webhub-integration.py`** – Eine modifizierte Version für den Serverbetrieb, welche die Inferenz in einen separaten Thread auslagert und mit dem Backend kommuniziert.
+* **`video_pipeline.py`** – Liest Video-Frames asynchron über eine Producer-Consumer-Architektur, um I/O-Blockaden zu vermeiden.
+* **`homography_engine.py`** – Der Motor für die Transformation der Spielerpositionen von Bildkoordinaten in ein zweidimensionales Taktikfeld.
+* **`ocr_pipeline.py`** – Die zentrale Datenpipeline für die Evaluierung der Lesbarkeit und die asynchrone Erkennung der Trikotnummern mittels EasyOCR.
+* **`heatmap.py`** – Generiert aus den getrackten Spieler-Trajektorien die taktischen Playcards.
+* **`data_base.py` & `data_class.py`** – Verwalten die Datenstrukturen und das Speichern der Ergebnisse in SQLite-Datenbanken (läuft in einem Hintergrund-Thread).
+* **`formation_architect.py`** – Extrahiert relevante Formationen aus der Datenbank und trainiert das XGBoost Modell.
+
+---
+
+## Installation und Vorbereitung
+
+> **Hinweis zur Python Version:** Für eine reibungslose Ausführung wird strikt **Python 3.12.3** empfohlen. Neuere Versionen (wie 3.13) können ebenfalls genutzt werden, erfordern jedoch möglicherweise eine manuelle Anpassung und Konfliktauflösung bei den Dependencies.
+
+Für eine saubere Ausführung wird dringend die Einrichtung einer isolierten virtuellen Umgebung empfohlen. Dadurch werden Konflikte mit bestehenden Systempaketen vermieden:
+
+```bash
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
 ```
 
-## Integrate with your tools
+**Wichtige Hinweise zur Dateistruktur:**
+Die Versionskontrolle schließt bewusst bestimmte Verzeichnisse und Dateitypen aus. Erstellen Sie nach dem Klonen des Repositories manuell einen Ordner namens `videos` im Wurzelverzeichnis des Projektes und fügen Sie dort die zu analysierenden Videodateien ein. 
 
-* [Set up project integrations](https://gitlab.informatik.fb2.frankfurt-university.de/edgeml/gruppe1/-/settings/integrations)
+Zusätzlich ignoriert Git automatisch generierte Ordner wie `data-base`, `datasets`, `runs`, `videos-ocr` sowie `ocr_real_runs`, um Speicherplatz zu sparen. Gleiches gilt für lokale SQLite Datenbanken und grundlegende YOLO Basisgewichte. Diese Maßnahme hält das Repository kompakt.
 
-## Collaborate with your team
+**Hinweis für Mac OS Nutzer:**
+Nutzer von macOS mit Apple Silicon Chips müssen bei der Installation der Abhängigkeiten besonders aufmerksam sein. Pakete wie PyTorch und OpenCV erfordern spezifische Versionen für die ARM Architektur, da das System MPS für die Hardwarebeschleunigung nutzt. 
+*Zudem wird der Betrieb des Webservers auf einem Mac System derzeit nicht empfohlen.* Die aktuelle Version weist eine ungelöste Inkompatibilität bei der Videoübertragung über HTTP auf. Dieses Problem resultiert aus massiven Konflikten zwischen PyTorch und OpenCV, wenn diese in sekundären Threads unter macOS ausgeführt werden.
 
-* [Invite team members and collaborators](https://docs.gitlab.com/user/project/members/)
-* [Create a new merge request](https://docs.gitlab.com/user/project/merge_requests/creating_merge_requests/)
-* [Automatically close issues from merge requests](https://docs.gitlab.com/user/project/issues/managing_issues/#closing-issues-automatically)
-* [Enable merge request approvals](https://docs.gitlab.com/user/project/merge_requests/approvals/)
-* [Set auto-merge](https://docs.gitlab.com/user/project/merge_requests/auto_merge/)
+---
 
-## Test and Deploy
+## Lokale Ausführung
 
-Use the built-in continuous integration in GitLab.
+Für die Analyse direkt auf dem Rechner bietet das Hauptskript verschiedene Modi. Der Standardmodus öffnet ein Fenster zur visuellen Verfolgung der Echtzeitanalyse:
 
-* [Get started with GitLab CI/CD](https://docs.gitlab.com/ci/quick_start/)
-* [Analyze your code for known vulnerabilities with Static Application Security Testing (SAST)](https://docs.gitlab.com/user/application_security/sast/)
-* [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/topics/autodevops/requirements/)
-* [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/user/clusters/agent/)
-* [Set up protected environments](https://docs.gitlab.com/ci/environments/protected_environments/)
+```bash
+python3 main.py
+```
 
-***
+Für eine ressourcenschonende Ausführung im Hintergrund existiert ein spezieller Parameter. Dieser Modus deaktiviert die grafische Oberfläche und eignet sich perfekt, wenn ausschließlich die Generierung der Playcards gewünscht wird oder kein Bildschirm zur Verfügung steht:
 
-# Editing this README
+```bash
+python3 main.py --headless
+```
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!). Thanks to [makeareadme.com](https://www.makeareadme.com/) for this template.
+---
 
-## Suggestions for a good README
+## Web Hub Ausführung
 
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Damit externe Endgeräte (z.B. Smartphones der Trainer) erfolgreich mit dem Backend kommunizieren können, muss vor dem Start eine wichtige Netzwerkkonfiguration angepasst werden. 
 
-## Name
-Choose a self-explaining name for your project.
+Öffnen Sie die Datei `project-web-hub/frontend/src/services/api.js` in einem Texteditor. Ersetzen Sie dort den standardmäßigen Wert `localhost` durch die tatsächliche IP-Adresse, welche das Jetson/Edge-Gerät beim Erstellen des Hotspots zugewiesen bekommt. Ohne diese Änderung suchen verbundene Endgeräte das Backend fälschlicherweise lokal auf sich selbst.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+Für den Einsatz am Spielfeldrand erfordert das System die parallele Ausführung von Backend und Frontend in zwei separaten Terminals:
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+**1. FastAPI Server (Terminal 1):**
+```bash
+cd project-web-hub/backend
+python3 -m uvicorn main:app --host 0.0.0.0 --port 8000
+```
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
+**2. React Frontend (Terminal 2):**
+```bash
+cd project-web-hub/frontend
+pnpm install
+pnpm run dev -- --host
+```
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+Trainer können anschließend über den Browser ihrer mobilen Endgeräte auf das Dashboard zugreifen und die Echtzeitanalyse steuern.
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+---
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## Generierte Ausgaben (Output)
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Am Ende der Verarbeitung generiert die Pipeline vollautomatisch:
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
-
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+- **Spieler-Detektionen und Multi-Object-Tracking**
+- **Spieler-Trajektorien** (geglättete Laufwege)
+- **Erkannte Trikotnummern** (Re-ID durch OCR)
+- **Offensiv-Formationsvorhersagen** (Pre-Snap)
+- **SQLite-Datenbanken** (enthalten alle Analyseresultate und Metadaten, gespeichert im Ordner `data-base/`)
+- **Taktische Playcards** (visuelle Renderings der Spielzüge, gespeichert im Ordner `cards/`)
