@@ -137,3 +137,9 @@ Am Ende der Verarbeitung generiert die Pipeline vollautomatisch:
 - **Offensiv-Formationsvorhersagen** (Pre-Snap)
 - **SQLite-Datenbanken** (enthalten alle Analyseresultate und Metadaten, gespeichert im Ordner `data-base/`)
 - **Taktische Playcards** (visuelle Renderings der Spielzüge, gespeichert im Ordner `cards/`)
+<img width="2118" height="1226" alt="grafik" src="https://github.com/user-attachments/assets/85143456-e826-4e04-8f03-659043da206a" />
+<img width="1539" height="862" alt="grafik" src="https://github.com/user-attachments/assets/ac981eb5-6c9d-4680-ac13-9037bafa293c" />
+<img width="1666" height="1131" alt="grafik" src="https://github.com/user-attachments/assets/0c9a51d5-eca7-44ce-a282-70a56512d753" />
+<img width="1539" height="1185" alt="grafik" src="https://github.com/user-attachments/assets/91ac6295-a2ca-4be0-9c2b-7926f925914e" />
+
+
